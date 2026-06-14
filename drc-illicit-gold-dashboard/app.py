@@ -370,7 +370,7 @@ st.dataframe(
     use_container_width=True
 )
 
-    st.info(
+st.info(
     "The Isolation Forest flags statistically unusual partner-year import values. "
     "Quantity information (altQty) exhibited no variation in the available UN Comtrade records, "
     "so anomaly detection was implemented as a univariate model on declared import values only. "
