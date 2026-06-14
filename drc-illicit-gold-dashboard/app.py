@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -346,7 +345,29 @@ with col2:
         st.warning("Country column not found in partner corridors file.")
 
     st.markdown("### Isolation Forest Trade Anomalies")
-    st.dataframe(anomalies, use_container_width=True)
+    display_df = (
+    anomalies[
+        [
+            "period",
+            "country",
+            "partner_import_value",
+            "anomaly_score"
+        ]
+    ]
+    .rename(
+        columns={
+            "period": "Year",
+            "country": "Partner Country",
+            "partner_import_value": "Declared Import Value (USD)",
+            "anomaly_score": "Anomaly Score"
+        }
+    )
+)
+
+st.dataframe(
+    display_df,
+    use_container_width=True
+)
 
     st.info(
     "The Isolation Forest flags statistically unusual partner-year import values. "
