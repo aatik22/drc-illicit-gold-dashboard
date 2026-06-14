@@ -349,9 +349,11 @@ with col2:
     st.dataframe(anomalies, use_container_width=True)
 
     st.info(
-        "The Isolation Forest flags statistically unusual partner-year observations. "
-        "These should be interpreted as anomaly signals requiring scrutiny, not direct proof of illicit trade."
-    )
+    "The Isolation Forest flags statistically unusual partner-year import values. "
+    "Quantity information (altQty) exhibited no variation in the available UN Comtrade records, "
+    "so anomaly detection was implemented as a univariate model on declared import values only. "
+    "These anomalies should be interpreted as signals requiring further scrutiny rather than direct proof of illicit trade."
+)
 
 # ==========================================================
 # TAB 5 — POLICY SIMULATION
