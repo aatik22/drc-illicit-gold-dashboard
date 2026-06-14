@@ -1,5 +1,5 @@
 
-import streamlit as st
+    import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -15,8 +15,15 @@ st.set_page_config(
 )
 
 st.title("DRC Illicit Gold Trade & Conflict Financing Dashboard")
+
 st.markdown(
-    "Interactive evidence base for **SDG Target 16.4**: reducing illicit financial and mineral flows."
+    """
+    **Ahsen Neva Atik**  
+    Koç University  
+    DS4SDGs - SDG Target 16.4
+
+    Interactive evidence base for reducing illicit financial and mineral flows in the Democratic Republic of Congo.
+    """
 )
 
 # ==========================================================
@@ -38,13 +45,11 @@ def load_data():
     corridors = pd.read_csv(PROCESSED_DIR / "partner_corridors.csv")
     province_summary = pd.read_csv(PROCESSED_DIR / "province_summary.csv")
     simulations = pd.read_csv(PROCESSED_DIR / "counterfactual_results.csv")
-
     return mines, mirror_gap, anomalies, corridors, province_summary, simulations
 
 
 try:
     mines, mirror_gap, anomalies, corridors, province_summary, simulations = load_data()
-
 except Exception as e:
     st.error(f"Data loading failed: {e}")
     st.stop()
@@ -229,7 +234,6 @@ with tab2:
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
     st.caption("Map uses quartile-based ITRI risk tiers.")
 
 # ==========================================================
@@ -254,7 +258,7 @@ with tab3:
         .sort_values("Mean_ITRI", ascending=False)
     )
 
-    st.dataframe(cluster_summary, use_container_width=True)
+    st.dataframe(cluster_summary, use_container_width=True, hide_index=True)
 
     col1, col2 = st.columns(2)
 
@@ -294,31 +298,67 @@ with tab4:
     col1, col2 = st.columns(2)
 
     plot_gap = mirror_gap[
-    mirror_gap["is_2023_shock"] == 0
-]
+        mirror_gap["is_2023_shock"] == 0
+    ]
 
-with col1:
-    fig = px.line(
-        plot_gap,
-        x="period",
-        y="mirror_trade_gap",
-        markers=True,
-        title="Mirror Trade Gap: Partner Imports − DRC Exports (2023 excluded)"
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    with col1:
+        fig = px.line(
+            plot_gap,
+            x="period",
+            y="mirror_trade_gap",
+            markers=True,
+            title="Mirror Trade Gap: Partner Imports − DRC Exports (2023 excluded)"
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-with col2:
-    fig = px.line(
-        plot_gap,
-        x="period",
-        y="gap_ratio",
-        markers=True,
-        title="Mirror Gap Ratio (2023 excluded)"
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    with col2:
+        fig = px.line(
+            plot_gap,
+            x="period",
+            y="gap_ratio",
+            markers=True,
+            title="Mirror Gap Ratio (2023 excluded)"
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("### Mirror Gap Table")
-    st.dataframe(mirror_gap, use_container_width=True)
+
+    mirror_display = (
+        mirror_gap.rename(
+            columns={
+                "period": "Year",
+                "partner_reported_imports": "Partner Imports (USD)",
+                "reporting_partners": "Reporting Partners",
+                "drc_reported_exports": "DRC Exports (USD)",
+                "mirror_trade_gap": "Mirror Gap (USD)",
+                "gap_ratio": "Gap Ratio",
+                "is_2023_shock": "2023 Structural Outlier"
+            }
+        )
+    )
+
+    money_cols = [
+        "Partner Imports (USD)",
+        "DRC Exports (USD)",
+        "Mirror Gap (USD)"
+    ]
+
+    for col in money_cols:
+        mirror_display[col] = (
+            mirror_display[col]
+            .map(lambda x: f"${x:,.0f}")
+        )
+
+    mirror_display["Gap Ratio"] = (
+        mirror_display["Gap Ratio"]
+        .map(lambda x: f"{x:.1%}")
+    )
+
+    st.dataframe(
+        mirror_display,
+        use_container_width=True,
+        hide_index=True
+    )
 
     st.markdown("### Top Partner Corridors")
 
@@ -341,41 +381,77 @@ with col2:
         )
         st.plotly_chart(fig, use_container_width=True)
 
-        st.dataframe(top_corridors, use_container_width=True)
+        corridor_display = (
+            top_corridors.rename(
+                columns={
+                    "country": "Partner Country",
+                    "Total_Import_Value": "Total Import Value (USD)",
+                    "Years_Reported": "Years Reported"
+                }
+            )
+        )
+
+        corridor_display["Total Import Value (USD)"] = (
+            corridor_display["Total Import Value (USD)"]
+            .map(lambda x: f"${x:,.0f}")
+        )
+
+        st.dataframe(
+            corridor_display,
+            use_container_width=True,
+            hide_index=True
+        )
+
+        st.info(
+            "The United Arab Emirates, China, Uganda, and Belgium account for the majority of declared partner imports of Congolese gold and constitute the principal trade corridors requiring enhanced due diligence and traceability measures."
+        )
+
     else:
         st.warning("Country column not found in partner corridors file.")
 
     st.markdown("### Isolation Forest Trade Anomalies")
+
     display_df = (
-    anomalies[
-        [
-            "period",
-            "country",
-            "partner_import_value",
-            "anomaly_score"
+        anomalies[
+            [
+                "period",
+                "country",
+                "partner_import_value",
+                "anomaly_score"
+            ]
         ]
-    ]
-    .rename(
-        columns={
-            "period": "Year",
-            "country": "Partner Country",
-            "partner_import_value": "Declared Import Value (USD)",
-            "anomaly_score": "Anomaly Score"
-        }
+        .rename(
+            columns={
+                "period": "Year",
+                "country": "Partner Country",
+                "partner_import_value": "Declared Import Value (USD)",
+                "anomaly_score": "Anomaly Score"
+            }
+        )
     )
-)
 
-st.dataframe(
-    display_df,
-    use_container_width=True
-)
+    display_df["Declared Import Value (USD)"] = (
+        display_df["Declared Import Value (USD)"]
+        .map(lambda x: f"${x:,.0f}")
+    )
 
-st.info(
-    "The Isolation Forest flags statistically unusual partner-year import values. "
-    "Quantity information (altQty) exhibited no variation in the available UN Comtrade records, "
-    "so anomaly detection was implemented as a univariate model on declared import values only. "
-    "These anomalies should be interpreted as signals requiring further scrutiny rather than direct proof of illicit trade."
-)
+    display_df["Anomaly Score"] = (
+        display_df["Anomaly Score"]
+        .round(4)
+    )
+
+    st.dataframe(
+        display_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.info(
+        "The Isolation Forest flags statistically unusual partner-year import values. "
+        "Quantity information (altQty) exhibited no variation in the available UN Comtrade records, "
+        "so anomaly detection was implemented as a univariate model on declared import values only. "
+        "These anomalies should be interpreted as signals requiring further scrutiny rather than direct proof of illicit trade."
+    )
 
 # ==========================================================
 # TAB 5 — POLICY SIMULATION
@@ -389,7 +465,7 @@ with tab5:
         "could reduce the national Illicit Trade Risk Index."
     )
 
-    st.dataframe(simulations, use_container_width=True)
+    st.dataframe(simulations, use_container_width=True, hide_index=True)
 
     col1, col2 = st.columns(2)
 
@@ -435,9 +511,13 @@ with tab5:
         .head(25)
     )
 
-    st.dataframe(priority, use_container_width=True)
+    st.dataframe(priority, use_container_width=True, hide_index=True)
 
     st.success(
         "Policy implication: targeting high-risk and critical untraceable mines produces the largest reduction "
         "in critical risk exposure, while accessible mine expansion offers a practical lower-cost intervention path."
     )
+
+st.markdown("---")
+st.caption(
+    "Developed by Ahsen Neva Atik • Koç University • DS4SDGs"
