@@ -361,8 +361,8 @@ st.dataframe(
 )
 
 st.markdown("### Top Partner Corridors")
-
-    if "country" in corridors.columns:
+    
+if "country" in corridors.columns:
         top_corridors = (
             corridors.groupby("country")
             .agg(
