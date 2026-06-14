@@ -520,4 +520,4 @@ with tab5:
 
 st.markdown("---")
 st.caption(
-    "Developed by Ahsen Neva Atik • Koç University • DS4SDGs"
+    "Developed by Ahsen Neva Atik • Koç University • DS4SDGs")
