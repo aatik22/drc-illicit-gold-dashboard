@@ -404,8 +404,8 @@ st.dataframe(
 st.info(
     "The United Arab Emirates, China, Uganda, and Belgium account for the majority of declared partner imports of Congolese gold and constitute the principal trade corridors requiring enhanced due diligence and traceability measures."
 )
-    else:
-        st.warning("Country column not found in partner corridors file.")
+else:
+    st.warning("Country column not found in partner corridors file.")
 
     st.markdown("### Isolation Forest Trade Anomalies")
     display_df = (
