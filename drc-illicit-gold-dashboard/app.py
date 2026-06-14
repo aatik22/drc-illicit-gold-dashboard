@@ -360,7 +360,7 @@ st.dataframe(
     hide_index=True
 )
 
-    st.markdown("### Top Partner Corridors")
+st.markdown("### Top Partner Corridors")
 
     if "country" in corridors.columns:
         top_corridors = (
