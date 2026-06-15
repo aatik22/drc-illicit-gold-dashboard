@@ -158,6 +158,12 @@ with tab1:
 
     col1, col2 = st.columns(2)
 
+    risk_colors = {
+    "Low": "#2E8B57",        # green
+    "Moderate": "#F4D03F",  # yellow
+    "High": "#E67E22",      # orange
+    "Critical": "#C0392B"   # red
+}
     with col1:
         st.markdown("### ITRI Distribution")
         fig = px.histogram(
