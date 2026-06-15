@@ -241,13 +241,11 @@ fig = px.scatter_mapbox(
     zoom=5,
     height=650,
     title="Mine-Level Illicit Trade Risk Map")
-
-    fig.update_layout(
+fig.update_layout(
         mapbox_style="carto-positron",
         margin={"r": 0, "t": 40, "l": 0, "b": 0})
-
-    st.plotly_chart(fig, use_container_width=True)
-    st.caption("Map uses quartile-based ITRI risk tiers.")
+st.plotly_chart(fig, use_container_width=True)
+st.caption("Map uses quartile-based ITRI risk tiers.")
 
 # ==========================================================
 # TAB 3 — TYPOLOGIES
