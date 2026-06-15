@@ -197,12 +197,37 @@ with tab1:
             .sort_values("Mean_ITRI", ascending=False)
         )
 
+        prov_chart["Risk_Tier"] = pd.qcut(
+    prov_chart["Mean_ITRI"],
+    q=4,
+    labels=[
+        "Low",
+        "Moderate",
+        "High",
+        "Critical"
+    ]
+)
         fig = px.bar(
-            prov_chart,
-            x="province",
-            y="Mean_ITRI",
-            title="Mean ITRI by Province"
-        )
+    prov_chart,
+    x="province",
+    y="Mean_ITRI",
+    color="Risk_Tier",
+    color_discrete_map=risk_colors,
+    category_orders={
+        "Risk_Tier": [
+            "Low",
+            "Moderate",
+            "High",
+            "Critical"
+        ]
+    },
+    title="Mean ITRI by Province"
+)
+        fig.update_layout(
+    xaxis_title="Province",
+    yaxis_title="Mean Illicit Trade Risk Index",
+    legend_title_text="Province Risk Tier"
+)
         st.plotly_chart(fig, use_container_width=True)
 
     st.info(
