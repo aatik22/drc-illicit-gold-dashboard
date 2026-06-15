@@ -161,12 +161,21 @@ with tab1:
     with col1:
         st.markdown("### ITRI Distribution")
         fig = px.histogram(
-            filtered,
-            x="itri",
-            nbins=35,
-            color="itri_tier",
-            title="Distribution of Illicit Trade Risk Index"
-        )
+    filtered,
+    x="itri",
+    nbins=35,
+    color="itri_tier",
+    color_discrete_map=risk_colors,
+    category_orders={
+        "itri_tier": [
+            "Low",
+            "Moderate",
+            "High",
+            "Critical"
+        ]
+    },
+    title="Distribution of Illicit Trade Risk Index"
+)
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
