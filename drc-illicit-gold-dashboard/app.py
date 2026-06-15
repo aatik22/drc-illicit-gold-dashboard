@@ -241,9 +241,6 @@ fig = px.scatter_mapbox(
     zoom=5,
     height=650,
     title="Mine-Level Illicit Trade Risk Map")
-        zoom=5,
-        height=650,
-        title="Mine-Level Illicit Trade Risk Map")
 
     fig.update_layout(
         mapbox_style="carto-positron",
